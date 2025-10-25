@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
 const Note = require('./models/note');
+const { STATUS_CODES } = require('node:http');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -16,14 +19,15 @@ app.use((req, res, next) => {
 });
 
 // Database Connection
-const mongoDbPath = "mongodb+srv://havasahammedt33_db_user:alikhan559@cluster0.udowshh.mongodb.net/?appName=Cluster0";
+// const mongoDbPath = "mongodb+srv://havasahammedt33_db_user:alikhan559@cluster0.udowshh.mongodb.net/?appName=Cluster0";
+const mongoDbPath = process.env.MONGO_URI
 mongoose.connect(mongoDbPath)
     .then(() => {
         console.log('Connected to MongoDB');
 
         // Routes
         app.get('/', (req, res) => {
-            const response = { message: 'API is running...' };
+            const response = { statusCode : res.statusCode, message: 'API is running...' };
             res.json(response);
         });
 
